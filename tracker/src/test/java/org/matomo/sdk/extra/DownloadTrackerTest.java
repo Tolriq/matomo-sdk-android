@@ -65,6 +65,7 @@ public class DownloadTrackerTest extends BaseTest {
     public void testTrackAppDownload() throws Exception {
         DownloadTracker downloadTracker = new DownloadTracker(mTracker);
         downloadTracker.trackOnce(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
 
@@ -102,6 +103,7 @@ public class DownloadTrackerTest extends BaseTest {
         assertEquals("http://installer", mCaptor.getValue().get(QueryParams.REFERRER));
 
         downloadTracker.trackNewAppDownload(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker, times(2)).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
         String downloadParams = mCaptor.getValue().get(QueryParams.DOWNLOAD);
@@ -123,6 +125,7 @@ public class DownloadTrackerTest extends BaseTest {
     public void testTrackReferrer() throws Exception {
         DownloadTracker downloadTracker = new DownloadTracker(mTracker);
         downloadTracker.trackNewAppDownload(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
         String downloadParams = mCaptor.getValue().get(QueryParams.DOWNLOAD);
@@ -136,6 +139,7 @@ public class DownloadTrackerTest extends BaseTest {
 
         when(mPackageManager.getInstallerPackageName(anyString())).thenReturn(null);
         downloadTracker.trackNewAppDownload(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker, times(2)).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
         m = REGEX_DOWNLOADTRACK.matcher(mCaptor.getValue().get(QueryParams.DOWNLOAD));
@@ -152,6 +156,7 @@ public class DownloadTrackerTest extends BaseTest {
         DownloadTracker downloadTracker = new DownloadTracker(mTracker);
         downloadTracker.setVersion("2");
         downloadTracker.trackOnce(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
         Matcher m = REGEX_DOWNLOADTRACK.matcher(mCaptor.getValue().get(QueryParams.DOWNLOAD));
@@ -166,6 +171,7 @@ public class DownloadTrackerTest extends BaseTest {
 
         downloadTracker.setVersion(null);
         downloadTracker.trackOnce(new TrackMe(), new DownloadTracker.Extra.None());
+        TestHelper.sleep(100);
         verify(mTracker, times(2)).track(mCaptor.capture());
         checkNewAppDownload(mCaptor.getValue());
         m = REGEX_DOWNLOADTRACK.matcher(mCaptor.getValue().get(QueryParams.DOWNLOAD));

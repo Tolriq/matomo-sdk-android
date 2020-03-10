@@ -1,7 +1,5 @@
 package org.matomo.sdk.extra;
 
-
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -21,13 +19,9 @@ import timber.log.Timber;
 
 public class DownloadTracker {
     protected static final String TAG = Matomo.tag(DownloadTracker.class);
-    private static final String INSTALL_SOURCE_GOOGLE_PLAY = "com.android.vending";
     private final Tracker mTracker;
     private final Object mTrackOnceLock = new Object();
-    private final PackageManager mPackMan;
     private final SharedPreferences mPreferences;
-    private final Context mContext;
-    private final boolean mInternalTracking;
     private String mVersion;
     private final PackageInfo mPkgInfo;
 
@@ -128,11 +122,8 @@ public class DownloadTracker {
 
     public DownloadTracker(Tracker tracker, @NonNull PackageInfo packageInfo) {
         mTracker = tracker;
-        mContext = tracker.getMatomo().getContext();
         mPreferences = tracker.getPreferences();
-        mPackMan = tracker.getMatomo().getContext().getPackageManager();
         mPkgInfo = packageInfo;
-        mInternalTracking = mPkgInfo.packageName.equals(mContext.getPackageName());
     }
 
     public void setVersion(@Nullable String version) {
@@ -155,18 +146,7 @@ public class DownloadTracker {
     }
 
     public void trackNewAppDownload(final TrackMe baseTrackme, @NonNull final Extra extra) {
-        // We can only get referrer information if we are tracking our own app download.
-        final boolean delay = mInternalTracking && INSTALL_SOURCE_GOOGLE_PLAY.equals(mPackMan.getInstallerPackageName(mPkgInfo.packageName));
-        if (delay) {
-            // Delay tracking incase we were called from within Application.onCreate
-            Timber.tag(TAG).d("Google Play is install source, deferring tracking.");
-        }
-        final Thread trackTask = new Thread(() -> {
-            if (delay) try {Thread.sleep(3000);} catch (Exception e) { Timber.tag(ContentValues.TAG).e(e);}
-            trackNewAppDownloadInternal(baseTrackme, extra);
-        });
-        if (!delay && !extra.isIntensiveWork()) trackTask.run();
-        else trackTask.start();
+        new Thread(() -> trackNewAppDownloadInternal(baseTrackme, extra)).start();
     }
 
     private void trackNewAppDownloadInternal(TrackMe baseTrackMe, @NonNull Extra extra) {
@@ -180,14 +160,8 @@ public class DownloadTracker {
 
         // Usual USEFUL values of this field will be: "com.android.vending" or "com.android.browser", i.e. app packagenames.
         // This is not guaranteed, values can also look like: app_process /system/bin com.android.commands.pm.Pm install -r /storage/sdcard0/...
-        String referringApp = mPackMan.getInstallerPackageName(mPkgInfo.packageName);
+        String referringApp = mTracker.getMatomo().getContext().getPackageManager().getInstallerPackageName(mPkgInfo.packageName);
         if (referringApp != null && referringApp.length() > 200) referringApp = referringApp.substring(0, 200);
-
-        if (referringApp != null && referringApp.equals(INSTALL_SOURCE_GOOGLE_PLAY)) {
-            // For this type of install source we could have extra referral information
-            String referrerExtras = mTracker.getMatomo().getPreferences().getString(InstallReferrerReceiver.PREF_KEY_INSTALL_REFERRER_EXTRAS, null);
-            if (referrerExtras != null) referringApp = referringApp + "/?" + referrerExtras;
-        }
 
         if (referringApp != null) referringApp = "http://" + referringApp;
 
