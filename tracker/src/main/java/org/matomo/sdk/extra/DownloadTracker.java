@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import org.matomo.sdk.Matomo;
 import org.matomo.sdk.QueryParams;
@@ -135,6 +136,7 @@ public class DownloadTracker {
         return Integer.toString(mPkgInfo.versionCode);
     }
 
+    @WorkerThread
     public void trackOnce(TrackMe baseTrackme, @NonNull Extra extra) {
         String firedKey = "downloaded:" + mPkgInfo.packageName + ":" + getVersion();
         synchronized (mTrackOnceLock) {
@@ -145,8 +147,9 @@ public class DownloadTracker {
         }
     }
 
+    @WorkerThread
     public void trackNewAppDownload(final TrackMe baseTrackme, @NonNull final Extra extra) {
-        new Thread(() -> trackNewAppDownloadInternal(baseTrackme, extra)).start();
+        trackNewAppDownloadInternal(baseTrackme, extra);
     }
 
     private void trackNewAppDownloadInternal(TrackMe baseTrackMe, @NonNull Extra extra) {
