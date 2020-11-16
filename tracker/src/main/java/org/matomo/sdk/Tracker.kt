@@ -31,7 +31,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     val siteId: Int = config.siteId
     private val mDefaultApplicationBaseUrl: String = config.applicationBaseUrl
     private val mTrackingLock = Any()
-    private val mDispatcher: Dispatcher?
+    private val mDispatcher: Dispatcher
     val name: String = config.trackerName
     private val mRandomAntiCachingValue = Random(Date().time)
 
@@ -80,7 +80,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
         set(optOut) {
             mOptOut = optOut
             preferences.edit().putBoolean(PREF_KEY_TRACKER_OPTOUT, optOut).apply()
-            mDispatcher!!.clear()
+            mDispatcher.clear()
         }
 
     fun startNewSession() {
@@ -96,7 +96,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      */
     fun dispatch() {
         if (mOptOut) return
-        mDispatcher!!.forceDispatch()
+        mDispatcher.forceDispatch()
     }
 
     /**
@@ -104,7 +104,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      */
     fun dispatchBlocking() {
         if (mOptOut) return
-        mDispatcher!!.forceDispatchBlocking()
+        mDispatcher.forceDispatchBlocking()
     }
 
     /**
@@ -114,7 +114,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      * @param dispatchInterval in milliseconds
      */
     fun setDispatchInterval(dispatchInterval: Long): Tracker {
-        mDispatcher!!.dispatchInterval = dispatchInterval
+        mDispatcher.dispatchInterval = dispatchInterval
         return this
     }
 
@@ -125,7 +125,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      * @param dispatchGzipped boolean
      */
     fun setDispatchGzipped(dispatchGzipped: Boolean): Tracker {
-        mDispatcher!!.dispatchGzipped = dispatchGzipped
+        mDispatcher.dispatchGzipped = dispatchGzipped
         return this
     }
 
@@ -133,7 +133,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      * @return in milliseconds
      */
     val dispatchInterval: Long
-        get() = mDispatcher!!.dispatchInterval
+        get() = mDispatcher.dispatchInterval
     /**
      * See [.setOfflineCacheAge]
      *
@@ -200,7 +200,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
             if (mode !== DispatchMode.EXCEPTION) {
                 preferences.edit().putString(PREF_KEY_DISPATCHER_MODE, mode.toString()).apply()
             }
-            mDispatcher!!.dispatchMode = mode
+            mDispatcher.dispatchMode = mode
         }
 
     /**
@@ -340,7 +340,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
             }
             lastEventX = newTrackMe
             if (!mOptOut) {
-                mDispatcher!!.submit(newTrackMe)
+                mDispatcher.submit(newTrackMe)
                 Timber.tag(TAG).d("Event added to the queue: %s", newTrackMe)
             } else {
                 Timber.tag(TAG).d("Event omitted due to opt out: %s", newTrackMe)
@@ -377,9 +377,9 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
      *
      */
     var dryRunTarget: MutableList<Packet>?
-        get() = mDispatcher?.dryRunTarget
+        get() = mDispatcher.dryRunTarget
         set(dryRunTarget) {
-            mDispatcher?.dryRunTarget = dryRunTarget
+            mDispatcher.dryRunTarget = dryRunTarget
         }
 
     fun interface Callback {
@@ -420,11 +420,11 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     }
 
     fun getDispatchTimeout(): Int {
-        return mDispatcher!!.connectionTimeOut
+        return mDispatcher.connectionTimeOut
     }
 
     fun setDispatchTimeout(timeout: Int) {
-        mDispatcher!!.connectionTimeOut = timeout
+        mDispatcher.connectionTimeOut = timeout
     }
 
     init {
