@@ -27,8 +27,6 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
     @Volatile
     private var mDispatchInterval = Dispatcher.DEFAULT_DISPATCH_INTERVAL
 
-    private var mDryRunTarget: MutableList<Packet>? = null
-
     @Volatile
     private var mRetryCounter = 0
 
@@ -145,9 +143,9 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
                 mEventCache.drainTo(drainedEvents)
                 Timber.tag(TAG).d("Drained %s events.", drainedEvents.size)
                 for (packet in mPacketFactory.buildPackets(drainedEvents)) {
-                    val success: Boolean = if (mDryRunTarget != null) {
-                        Timber.tag(TAG).d("DryRun, stored HttpRequest, now %d.", mDryRunTarget!!.size)
-                        mDryRunTarget!!.add(packet)
+                    val success: Boolean = if (dryRunTarget != null) {
+                        Timber.tag(TAG).d("DryRun, stored HttpRequest, now %d.", dryRunTarget!!.size)
+                        dryRunTarget!!.add(packet)
                     } else {
                         mPacketSender.send(packet)
                     }
@@ -196,11 +194,7 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
             DispatchMode.WIFI_ONLY -> mConnectivity.type == Connectivity.Type.WIFI
         }
 
-    override var dryRunTarget: MutableList<Packet>?
-        get() = mDryRunTarget
-        set(value) {
-            mDryRunTarget = value
-        }
+    override var dryRunTarget: MutableList<Packet>? = null
 
     companion object {
         private val TAG = Matomo.tag(DefaultDispatcher::class.java)
