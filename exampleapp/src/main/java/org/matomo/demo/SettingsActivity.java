@@ -23,9 +23,6 @@ import org.matomo.sdk.extra.TrackHelper;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import timber.log.Timber;
-
-
 public class SettingsActivity extends Activity {
 
     private void refreshUI(final Activity settingsActivity) {
@@ -72,7 +69,7 @@ public class SettingsActivity extends Activity {
                             ((MatomoApplication) getApplication()).getTracker()
                                     .setDispatchInterval(interval);
                         } catch (NumberFormatException e) {
-                            Timber.d("not a number: %s", charSequence.toString());
+                            // Ignore
                         }
                     }
 
@@ -103,7 +100,7 @@ public class SettingsActivity extends Activity {
                                     .setSessionTimeout(timeoutMin * 60);
                         } catch (NumberFormatException e) {
                             ((EditText) settingsActivity.findViewById(R.id.sessionTimeoutInput)).setText("30");
-                            Timber.d("not a number: %s", charSequence.toString());
+                            // Ignore
                         }
                     }
 

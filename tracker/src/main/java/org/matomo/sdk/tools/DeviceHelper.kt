@@ -10,8 +10,6 @@ import android.content.Context
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.WindowManager
-import org.matomo.sdk.Matomo
-import timber.log.Timber
 import java.util.Locale
 
 /**
@@ -60,7 +58,6 @@ class DeviceHelper(private val mContext: Context, private val mPropertySource: P
                 val wm = mContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
                 wm.defaultDisplay
             } catch (e: NullPointerException) {
-                Timber.tag(TAG).e(e, "Window service was not available from this context")
                 return null
             }
             // Recommended way to get the resolution but only available since API17
@@ -78,8 +75,4 @@ class DeviceHelper(private val mContext: Context, private val mPropertySource: P
             }
             return intArrayOf(width, height)
         }
-
-    companion object {
-        private val TAG = Matomo.tag(DeviceHelper::class.java)
-    }
 }

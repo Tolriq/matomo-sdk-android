@@ -1,7 +1,5 @@
 package org.matomo.sdk.dispatcher
 
-import org.matomo.sdk.Matomo
-import timber.log.Timber
 import java.net.URLEncoder
 
 class Event(val timeStamp: Long, val encodedQuery: String) {
@@ -27,7 +25,6 @@ class Event(val timeStamp: Long, val encodedQuery: String) {
     }
 
     companion object {
-        private val TAG = Matomo.tag(Event::class.java)
 
         /**
          * http://stackoverflow.com/q/4737841
@@ -39,7 +36,6 @@ class Event(val timeStamp: Long, val encodedQuery: String) {
             return try {
                 URLEncoder.encode(param, "UTF-8").replace("\\+".toRegex(), "%20")
             } catch (e: Exception) {
-                Timber.tag(TAG).e(e, "Cannot encode %s", param)
                 ""
             }
         }

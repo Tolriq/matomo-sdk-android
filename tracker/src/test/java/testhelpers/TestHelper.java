@@ -1,7 +1,5 @@
 package testhelpers;
 
-import timber.log.Timber;
-
 public class TestHelper {
 
     public static void sleep(long millis) {
@@ -9,7 +7,6 @@ public class TestHelper {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            Timber.e(e);
         }
     }
 }

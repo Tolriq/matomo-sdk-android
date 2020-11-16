@@ -1,7 +1,5 @@
 package org.matomo.sdk.dispatcher
 
-import org.matomo.sdk.Matomo
-import timber.log.Timber
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.ByteArrayOutputStream
@@ -21,8 +19,6 @@ class DefaultPacketSender : PacketSender {
         var urlConnection: HttpURLConnection? = null
         return try {
             urlConnection = URL(packet.targetURL).openConnection() as HttpURLConnection
-            Timber.tag(TAG).v("Connection is open to %s", urlConnection.url.toExternalForm())
-            Timber.tag(TAG).v("Sending: %s", packet)
             urlConnection.connectTimeout = mTimeout.toInt()
             urlConnection.readTimeout = mTimeout.toInt()
 
@@ -54,7 +50,6 @@ class DefaultPacketSender : PacketSender {
                                 outputStream.close()
                             } catch (e: IOException) {
                                 // Failing to close the stream is not enough to consider the transmission faulty.
-                                Timber.tag(TAG).d(e, "Failed to close output stream after writing gzipped POST data.")
                             }
                         }
                     }
@@ -69,7 +64,6 @@ class DefaultPacketSender : PacketSender {
                                 writer.close()
                             } catch (e: IOException) {
                                 // Failing to close the stream is not enough to consider the transmission faulty.
-                                Timber.tag(TAG).d(e, "Failed to close output stream after writing POST data.")
                             }
                         }
                     }
@@ -78,7 +72,6 @@ class DefaultPacketSender : PacketSender {
                 urlConnection.doOutput = false // Defaults to false, but for readability
             }
             val statusCode = urlConnection.responseCode
-            Timber.tag(TAG).v("Transmission finished (code=%d).", statusCode)
             val successful = statusCode == HttpURLConnection.HTTP_NO_CONTENT || statusCode == HttpURLConnection.HTTP_OK
             if (successful) {
 
@@ -88,7 +81,7 @@ class DefaultPacketSender : PacketSender {
                     try {
                         `is`.close()
                     } catch (e: IOException) {
-                        Timber.tag(TAG).d(e, "Failed to close the error stream.")
+                        // Ignore
                     }
                 }
             } else {
@@ -104,15 +97,13 @@ class DefaultPacketSender : PacketSender {
                         try {
                             errorReader.close()
                         } catch (e: IOException) {
-                            Timber.tag(TAG).d(e, "Failed to close the error stream.")
+                            // Ignore
                         }
                     }
                 }
-                Timber.tag(TAG).w("Transmission failed (code=%d, reason=%s)", statusCode, errorReason.toString())
             }
             successful
         } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "Transmission failed unexpectedly.")
             false
         } finally {
             urlConnection?.disconnect()
@@ -125,9 +116,5 @@ class DefaultPacketSender : PacketSender {
 
     override fun setGzipData(gzip: Boolean) {
         mGzip = gzip
-    }
-
-    companion object {
-        private val TAG = Matomo.tag(DefaultPacketSender::class.java)
     }
 }

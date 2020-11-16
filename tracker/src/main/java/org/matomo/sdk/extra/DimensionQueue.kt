@@ -1,11 +1,9 @@
 package org.matomo.sdk.extra
 
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.TrackMe
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.extra.CustomDimension.Companion.getDimension
 import org.matomo.sdk.extra.CustomDimension.Companion.setDimension
-import timber.log.Timber
 import java.util.ArrayList
 
 /**
@@ -28,18 +26,12 @@ class DimensionQueue(tracker: Tracker) {
         while (it.hasNext()) {
             val dim = it.next()
             val existing = getDimension(trackMe, dim.id)
-            if (existing != null) {
-                Timber.tag(TAG).d("Setting dimension %s to slot %d would overwrite %s, skipping!", dim.value, dim.id, existing)
-            } else {
+            if (existing == null) {
                 setDimension(trackMe, dim)
                 it.remove()
             }
         }
         return trackMe
-    }
-
-    companion object {
-        private val TAG = Matomo.tag(DimensionQueue::class.java)
     }
 
     init {

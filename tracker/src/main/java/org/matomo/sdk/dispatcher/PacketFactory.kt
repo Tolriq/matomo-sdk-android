@@ -6,13 +6,10 @@
  */
 package org.matomo.sdk.dispatcher
 
-import android.text.TextUtils
 import androidx.annotation.VisibleForTesting
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.matomo.sdk.Matomo
-import timber.log.Timber
 import java.util.ArrayList
 import kotlin.math.ceil
 
@@ -49,7 +46,7 @@ class PacketFactory(private val mApiUrl: String) {
             params.put("requests", jsonArray)
             return Packet(mApiUrl, params, events.size)
         } catch (e: JSONException) {
-            Timber.tag(TAG).w(e, "Cannot create json object:\n%s", TextUtils.join(", ", events))
+            // Ignore
         }
         return null
     }
@@ -60,8 +57,6 @@ class PacketFactory(private val mApiUrl: String) {
     }
 
     companion object {
-        private val TAG = Matomo.tag(PacketFactory::class.java)
-
         @VisibleForTesting
         const val PAGE_SIZE = 20
     }

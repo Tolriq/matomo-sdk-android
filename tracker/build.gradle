@@ -24,7 +24,6 @@ android {
 
 dependencies {
     implementation 'androidx.annotation:annotation:1.1.0'
-    implementation "com.jakewharton.timber:timber:${timberVersion}"
 
     testImplementation 'org.awaitility:awaitility:3.0.0'
     // Robolectric

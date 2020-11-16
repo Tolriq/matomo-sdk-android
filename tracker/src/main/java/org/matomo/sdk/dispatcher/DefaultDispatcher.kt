@@ -6,10 +6,8 @@
  */
 package org.matomo.sdk.dispatcher
 
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.TrackMe
 import org.matomo.sdk.tools.Connectivity
-import timber.log.Timber
 import java.util.ArrayList
 import java.util.concurrent.Semaphore
 import java.util.concurrent.TimeUnit
@@ -105,7 +103,7 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
             try {
                 dispatchThread.join()
             } catch (e: InterruptedException) {
-                Timber.tag(TAG).d("Interrupted while waiting for dispatch thread to complete")
+                // Ignore
             }
         }
         synchronized(mThreadControl) {
@@ -135,16 +133,14 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
                 // Either we wait the interval or forceDispatch() granted us one free pass
                 mSleepToken.tryAcquire(sleepTime, TimeUnit.MILLISECONDS)
             } catch (e: InterruptedException) {
-                Timber.tag(TAG).e(e)
+                // Ignore
             }
             if (mEventCache.updateState(isOnline)) {
                 var count = 0
                 val drainedEvents: MutableList<Event> = ArrayList()
                 mEventCache.drainTo(drainedEvents)
-                Timber.tag(TAG).d("Drained %s events.", drainedEvents.size)
                 for (packet in mPacketFactory.buildPackets(drainedEvents)) {
                     val success: Boolean = if (dryRunTarget != null) {
-                        Timber.tag(TAG).d("DryRun, stored HttpRequest, now %d.", dryRunTarget!!.size)
                         dryRunTarget!!.add(packet)
                     } else {
                         mPacketSender.send(packet)
@@ -155,7 +151,6 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
                     } else {
                         // On network failure, requeue all un-sent events, but use isOnline to determine if events should be cached in
                         // memory or disk
-                        Timber.tag(TAG).d("Failure while trying to send packet")
                         mRetryCounter++
                         break
                     }
@@ -163,13 +158,10 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
                     // Re-check network connectivity to early exit if we drop offline.  This speeds up how quickly the setOffline method will
                     // take effect
                     if (!isOnline) {
-                        Timber.tag(TAG).d("Disconnected during dispatch loop")
                         break
                     }
                 }
-                Timber.tag(TAG).d("Dispatched %d events.", count)
                 if (count < drainedEvents.size) {
-                    Timber.tag(TAG).d("Unable to send all events, requeueing %d events", drainedEvents.size - count)
                     // Requeue events to the event cache that weren't processed (either PacketSender failure or we are now offline).  Once the
                     // events are requeued we update the event cache state to write the requeued events to disk or to leave them in memory
                     // depending on the connectivity state of the device.
@@ -195,10 +187,6 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
         }
 
     override var dryRunTarget: MutableList<Packet>? = null
-
-    companion object {
-        private val TAG = Matomo.tag(DefaultDispatcher::class.java)
-    }
 
     init {
         mPacketSender.setGzipData(mDispatchGzipped)

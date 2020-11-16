@@ -1,8 +1,6 @@
 package org.matomo.sdk.extra
 
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.TrackMe
-import timber.log.Timber
 
 /**
  * Allows you to track Custom Dimensions.
@@ -12,8 +10,6 @@ import timber.log.Timber
 class CustomDimension(val id: Int, val value: String) {
 
     companion object {
-        private val TAG = Matomo.tag(CustomDimension::class.java)
-
         /**
          * This method sets a tracking API parameter dimension%dimensionId%=%dimensionValue%.
          * Eg dimension1=foo or dimension2=bar.
@@ -31,12 +27,10 @@ class CustomDimension(val id: Int, val value: String) {
         fun setDimension(trackMe: TrackMe, dimensionId: Int, dimensionValue: String?): Boolean {
             var newDimensionValue = dimensionValue
             if (dimensionId < 1) {
-                Timber.tag(TAG).e("dimensionId should be great than 0 (arg: %d)", dimensionId)
                 return false
             }
             if (newDimensionValue != null && newDimensionValue.length > 255) {
                 newDimensionValue = newDimensionValue.substring(0, 255)
-                Timber.tag(TAG).w("dimensionValue was truncated to 255 chars.")
             }
             if (newDimensionValue != null && newDimensionValue.isEmpty()) {
                 newDimensionValue = null

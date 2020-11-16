@@ -6,7 +6,6 @@ import android.app.Application
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Build
 import android.os.Bundle
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.QueryParams
 import org.matomo.sdk.TrackMe
 import org.matomo.sdk.Tracker
@@ -14,7 +13,6 @@ import org.matomo.sdk.extra.CustomDimension.Companion.setDimension
 import org.matomo.sdk.extra.DownloadTracker.Extra
 import org.matomo.sdk.tools.ActivityHelper
 import org.matomo.sdk.tools.CurrencyFormatter
-import timber.log.Timber
 import java.net.URL
 import java.util.HashMap
 
@@ -52,7 +50,6 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
                 val trackMe = build()
                 tracker.track(trackMe)
             } catch (e: IllegalArgumentException) {
-                Timber.e(e)
                 return false
             }
             return true
@@ -618,7 +615,6 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
                 val trace = mThrowable.stackTrace[0]
                 trace.className + "/" + trace.methodName + ":" + trace.lineNumber
             } catch (e: java.lang.Exception) {
-                Timber.tag(TAG).w(e, "Couldn't get stack info")
                 mThrowable.javaClass.name
             }
             val actionName = "exception/" + (if (mIsFatal) "fatal/" else "") + "$className/" + mDescription
@@ -748,8 +744,6 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
     }
 
     companion object {
-        private val TAG = Matomo.tag(TrackHelper::class.java)
-
         @JvmStatic
         fun track(): TrackHelper {
             return TrackHelper()

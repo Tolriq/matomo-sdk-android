@@ -15,7 +15,6 @@ import org.matomo.sdk.tools.BuildInfo
 import org.matomo.sdk.tools.Checksum.getMD5Checksum
 import org.matomo.sdk.tools.DeviceHelper
 import org.matomo.sdk.tools.PropertySource
-import timber.log.Timber
 import java.util.HashMap
 
 class Matomo private constructor(context: Context) {
@@ -39,11 +38,9 @@ class Matomo private constructor(context: Context) {
         synchronized(mPreferenceMap) {
             var newPrefs = mPreferenceMap[tracker]
             if (newPrefs == null) {
-                val prefName: String
-                prefName = try {
+                val prefName: String = try {
                     "org.matomo.sdk_" + getMD5Checksum(tracker.name)
                 } catch (e: Exception) {
-                    Timber.tag(TAG).e(e)
                     "org.matomo.sdk_" + tracker.name
                 }
                 newPrefs = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
@@ -57,8 +54,6 @@ class Matomo private constructor(context: Context) {
         get() = DeviceHelper(context, PropertySource(), BuildInfo())
 
     companion object {
-        private const val LOGGER_PREFIX = "MATOMO:"
-        private val TAG = tag(Matomo::class.java)
         private const val BASE_PREFERENCE_FILE = "org.matomo.sdk"
 
         @SuppressLint("StaticFieldLeak")
@@ -71,25 +66,6 @@ class Matomo private constructor(context: Context) {
                 synchronized(Matomo::class.java) { if (sInstance == null) sInstance = Matomo(context) }
             }
             return sInstance!!
-        }
-
-        @JvmStatic
-        fun tag(vararg classes: Class<*>): String {
-            val tags = arrayOfNulls<String>(classes.size)
-            for (i in classes.indices) {
-                tags[i] = classes[i].simpleName
-            }
-            return tag(*tags)
-        }
-
-        @JvmStatic
-        fun tag(vararg tags: String?): String {
-            val sb = StringBuilder(LOGGER_PREFIX)
-            for (i in tags.indices) {
-                sb.append(tags[i])
-                if (i < tags.size - 1) sb.append(":")
-            }
-            return sb.toString()
         }
     }
 

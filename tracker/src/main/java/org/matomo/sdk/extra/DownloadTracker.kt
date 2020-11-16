@@ -5,12 +5,10 @@ import android.content.SharedPreferences
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import androidx.annotation.WorkerThread
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.QueryParams
 import org.matomo.sdk.TrackMe
 import org.matomo.sdk.Tracker
 import org.matomo.sdk.tools.Checksum
-import timber.log.Timber
 import java.io.File
 
 open class DownloadTracker @JvmOverloads constructor(private val mTracker: Tracker, packageInfo: PackageInfo = getOurPackageInfo(mTracker.matomo.context)) {
@@ -50,7 +48,6 @@ open class DownloadTracker @JvmOverloads constructor(private val mTracker: Track
                 mPackageInfo = try {
                     context.packageManager.getPackageInfo(context.packageName, 0)
                 } catch (e: Exception) {
-                    Timber.tag(TAG).e(e)
                     null
                 }
             }
@@ -66,7 +63,7 @@ open class DownloadTracker @JvmOverloads constructor(private val mTracker: Track
                     try {
                         return Checksum.getMD5Checksum(File(mPackageInfo!!.applicationInfo.sourceDir))
                     } catch (e: Exception) {
-                        Timber.tag(TAG).e(e)
+                        // Ignore
                     }
                 }
                 return null
@@ -115,7 +112,6 @@ open class DownloadTracker @JvmOverloads constructor(private val mTracker: Track
     }
 
     private fun trackNewAppDownloadInternal(baseTrackMe: TrackMe, extra: Extra) {
-        Timber.tag(TAG).d("Tracking app download...")
         val installIdentifier = StringBuilder()
         installIdentifier.append("http://").append(mPkgInfo.packageName).append(":").append(version)
         val extraIdentifier = extra.buildExtraIdentifier()
@@ -133,19 +129,15 @@ open class DownloadTracker @JvmOverloads constructor(private val mTracker: Track
                 .set(QueryParams.URL_PATH, "/application/downloaded")
                 .set(QueryParams.DOWNLOAD, installIdentifier.toString())
                 .set(QueryParams.REFERRER, referringApp)) // Can be null in which case the TrackMe removes the REFERRER parameter.
-        Timber.tag(TAG).d("... app download tracked.")
     }
 
     companion object {
-        protected val TAG = Matomo.tag(DownloadTracker::class.java)
         private fun getOurPackageInfo(context: Context): PackageInfo {
             return try {
                 context.packageManager.getPackageInfo(context.packageName, 0)
             } catch (e: PackageManager.NameNotFoundException) {
-                Timber.tag(TAG).e(e)
                 throw RuntimeException(e)
             }
         }
     }
-
 }

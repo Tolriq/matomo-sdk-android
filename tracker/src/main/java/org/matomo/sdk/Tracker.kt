@@ -7,13 +7,11 @@
 package org.matomo.sdk
 
 import android.content.SharedPreferences
-import org.matomo.sdk.Matomo.Companion.tag
 import org.matomo.sdk.dispatcher.DispatchMode
 import org.matomo.sdk.dispatcher.DispatchMode.Companion.fromString
 import org.matomo.sdk.dispatcher.Dispatcher
 import org.matomo.sdk.dispatcher.Packet
 import org.matomo.sdk.tools.Objects.equals
-import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.LinkedHashSet
@@ -334,16 +332,12 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
             for (callback in mTrackingCallbacks) {
                 newTrackMe = newTrackMe?.run { callback.onTrack(this) }
                 if (newTrackMe == null) {
-                    Timber.tag(TAG).d("Tracking aborted by %s", callback)
                     return this
                 }
             }
             lastEventX = newTrackMe
             if (!mOptOut) {
                 mDispatcher.submit(newTrackMe)
-                Timber.tag(TAG).d("Event added to the queue: %s", newTrackMe)
-            } else {
-                Timber.tag(TAG).d("Event omitted due to opt out: %s", newTrackMe)
             }
             return this
         }
@@ -394,8 +388,6 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     }
 
     companion object {
-        private val TAG = tag(Tracker::class.java)
-
         // Matomo default parameter values
         private const val DEFAULT_UNKNOWN_VALUE = "unknown"
         private const val DEFAULT_TRUE_VALUE = "1"

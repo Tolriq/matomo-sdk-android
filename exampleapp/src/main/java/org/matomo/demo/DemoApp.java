@@ -15,8 +15,6 @@ import org.matomo.sdk.extra.DownloadTracker;
 import org.matomo.sdk.extra.MatomoApplication;
 import org.matomo.sdk.extra.TrackHelper;
 
-import timber.log.Timber;
-
 public class DemoApp extends MatomoApplication {
     private DimensionQueue mDimensionQueue;
 
@@ -38,7 +36,6 @@ public class DemoApp extends MatomoApplication {
 
     private void onInitTracker() {
         // Print debug output when working on an app.
-        Timber.plant(new Timber.DebugTree());
 
         // When working on an app we don't want to skew tracking results.
         // getMatomo().setDryRun(BuildConfig.DEBUG);
@@ -60,9 +57,6 @@ public class DemoApp extends MatomoApplication {
         // This will be send the next time something is tracked.
         mDimensionQueue.add(0, "test");
 
-        getTracker().addTrackingCallback(trackMe -> {
-            Timber.i("Tracker.Callback.onTrack(%s)", trackMe);
-            return trackMe;
-        });
+        getTracker().addTrackingCallback(trackMe -> trackMe);
     }
 }

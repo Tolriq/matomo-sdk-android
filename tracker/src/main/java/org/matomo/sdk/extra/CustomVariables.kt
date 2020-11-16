@@ -9,10 +9,8 @@ package org.matomo.sdk.extra
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.matomo.sdk.Matomo
 import org.matomo.sdk.QueryParams
 import org.matomo.sdk.TrackMe
-import timber.log.Timber
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -54,7 +52,7 @@ class CustomVariables {
                     put(key, jsonObject.getJSONArray(key))
                 }
             } catch (e: JSONException) {
-                Timber.tag(TAG).e(e, "Failed to create CustomVariables from JSON")
+                // Ignore
             }
         }
     }
@@ -83,15 +81,13 @@ class CustomVariables {
         var newValue = value
         if (index > 0 && newName != null && newValue != null) {
             if (newName.length > MAX_LENGTH) {
-                Timber.tag(TAG).w("Name is too long %s", newName)
                 newName = newName.substring(0, MAX_LENGTH)
             }
             if (newValue.length > MAX_LENGTH) {
-                Timber.tag(TAG).w("Value is too long %s", newValue)
                 newValue = newValue.substring(0, MAX_LENGTH)
             }
             put(index.toString(), JSONArray(listOf(newName, newValue)))
-        } else Timber.tag(TAG).w("Index is out of range or name/value is null")
+        }
         return this
     }
 
@@ -103,7 +99,7 @@ class CustomVariables {
     fun put(index: String?, values: JSONArray): CustomVariables {
         if (values.length() == 2 && index != null) {
             mVars[index] = values
-        } else Timber.tag(TAG).w("values.length() should be equal 2")
+        }
         return this
     }
 
@@ -129,7 +125,6 @@ class CustomVariables {
     }
 
     companion object {
-        private val TAG = Matomo.tag(CustomVariables::class.java)
         const val MAX_LENGTH = 200
     }
 }
