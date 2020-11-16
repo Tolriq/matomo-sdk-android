@@ -14,6 +14,7 @@ import java.util.Arrays;
 import testhelpers.BaseTest;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("deprecation")
@@ -101,7 +102,7 @@ public class CustomVariablesTest extends BaseTest {
         CustomVariables cv = new CustomVariables();
         cv.put("test", new JSONArray(Arrays.asList("1", "2", "3")));
         assertEquals(0, cv.size());
-        assertEquals(null, cv.toString());
+        assertEquals("", cv.toString());
         cv.put("test", new JSONArray(Arrays.asList("1", "2")));
         assertEquals(
                 "{\"test\":[\"1\",\"2\"]}",

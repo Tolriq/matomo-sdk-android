@@ -28,7 +28,7 @@ public class DeviceHelperTest extends BaseTest {
         when(mBuildInfo.getBuildId()).thenReturn("ABCDEF");
         when(mBuildInfo.getModel()).thenReturn("UnitTest");
         when(mBuildInfo.getRelease()).thenReturn("8.0.0");
-        when(mPropertySource.getJVMVersion()).thenReturn("2.2.0");
+        when(mPropertySource.getJvmVersion()).thenReturn("2.2.0");
         mDeviceHelper = new DeviceHelper(mContext, mPropertySource, mBuildInfo);
     }
 
@@ -45,9 +45,9 @@ public class DeviceHelperTest extends BaseTest {
         verify(mBuildInfo).getBuildId();
         verify(mBuildInfo).getModel();
         verify(mBuildInfo).getRelease();
-        verify(mPropertySource).getJVMVersion();
+        verify(mPropertySource).getJvmVersion();
 
-        when(mPropertySource.getJVMVersion()).thenReturn(null);
+        when(mPropertySource.getJvmVersion()).thenReturn(null);
         assertEquals("Dalvik/0.0.0 (Linux; U; Android 8.0.0; UnitTest Build/ABCDEF)", mDeviceHelper.getUserAgent());
     }
 }

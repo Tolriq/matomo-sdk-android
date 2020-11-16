@@ -43,11 +43,16 @@ import static org.mockito.Mockito.when;
 @SuppressWarnings("deprecation")
 public class TrackHelperTest {
     ArgumentCaptor<TrackMe> mCaptor = ArgumentCaptor.forClass(TrackMe.class);
-    @Mock Tracker mTracker;
-    @Mock Matomo mMatomo;
-    @Mock Context mContext;
-    @Mock PackageManager mPackageManager;
-    @Mock MatomoApplication mMatomoApplication;
+    @Mock
+    Tracker mTracker;
+    @Mock
+    Matomo mMatomo;
+    @Mock
+    Context mContext;
+    @Mock
+    PackageManager mPackageManager;
+    @Mock
+    MatomoApplication mMatomoApplication;
 
     @Before
     public void setup() throws PackageManager.NameNotFoundException {
@@ -392,13 +397,19 @@ public class TrackHelperTest {
         int errorCount = 0;
         try {
             track().interaction("", "test").piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         try {
             track().interaction("test", "").piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         try {
             track().interaction("", "").piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         assertThat(errorCount, is(3));
     }
 
@@ -407,13 +418,19 @@ public class TrackHelperTest {
         int errorCount = 0;
         try {
             track().interaction(null, "test").piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         try {
             track().interaction("test", null).piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         try {
             track().interaction(null, null).piece("test").target("test2").build();
-        } catch (IllegalArgumentException e) { errorCount++; }
+        } catch (IllegalArgumentException e) {
+            errorCount++;
+        }
         assertThat(errorCount, is(3));
     }
 

@@ -22,9 +22,9 @@ public class PropertySourceTest extends BaseTest {
     @Test
     public void testGetJVMVersion() {
         PropertySource propertySource = spy(new PropertySource());
-        propertySource.getJVMVersion();
+        propertySource.getJvmVersion();
         verify(propertySource).getSystemProperty("java.vm.version");
 
-        assertEquals(propertySource.getJVMVersion(), propertySource.getSystemProperty("java.vm.version"));
+        assertEquals(propertySource.getJvmVersion(), propertySource.getSystemProperty("java.vm.version"));
     }
 }

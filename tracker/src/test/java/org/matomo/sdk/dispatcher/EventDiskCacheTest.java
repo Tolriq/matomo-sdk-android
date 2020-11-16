@@ -44,7 +44,7 @@ public class EventDiskCacheTest extends BaseTest {
         mBaseCacheDir = new File("baseCacheDir");
         when(mContext.getCacheDir()).thenReturn(mBaseCacheDir);
 
-        when(mTracker.getAPIUrl()).thenReturn("http://testhost/matomo.php");
+        when(mTracker.getApiUrl()).thenReturn("http://testhost/matomo.php");
 
         when(mTracker.getOfflineCacheAge()).thenReturn(0L);
 
