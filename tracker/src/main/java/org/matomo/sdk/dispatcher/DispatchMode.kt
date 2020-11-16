@@ -22,12 +22,8 @@ enum class DispatchMode(private val key: String) {
     }
 
     companion object {
-        @JvmStatic
         fun fromString(raw: String?): DispatchMode? {
-            for (mode in values()) {
-                if (mode.key == raw) return mode
-            }
-            return null
+            return values().firstOrNull { it.key == raw }
         }
     }
 }
