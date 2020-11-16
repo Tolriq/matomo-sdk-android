@@ -17,10 +17,10 @@ import java.util.zip.GZIPOutputStream
 class DefaultPacketSender : PacketSender {
     private var mTimeout = Dispatcher.DEFAULT_CONNECTION_TIMEOUT.toLong()
     private var mGzip = false
-    override fun send(packet: Packet?): Boolean {
+    override fun send(packet: Packet): Boolean {
         var urlConnection: HttpURLConnection? = null
         return try {
-            urlConnection = URL(packet!!.targetURL).openConnection() as HttpURLConnection
+            urlConnection = URL(packet.targetURL).openConnection() as HttpURLConnection
             Timber.tag(TAG).v("Connection is open to %s", urlConnection.url.toExternalForm())
             Timber.tag(TAG).v("Sending: %s", packet)
             urlConnection.connectTimeout = mTimeout.toInt()
@@ -79,7 +79,7 @@ class DefaultPacketSender : PacketSender {
             }
             val statusCode = urlConnection.responseCode
             Timber.tag(TAG).v("Transmission finished (code=%d).", statusCode)
-            val successful = checkResponseCode(statusCode)
+            val successful = statusCode == HttpURLConnection.HTTP_NO_CONTENT || statusCode == HttpURLConnection.HTTP_OK
             if (successful) {
 
                 // https://github.com/matomo-org/matomo-sdk-android/issues/226
@@ -129,8 +129,5 @@ class DefaultPacketSender : PacketSender {
 
     companion object {
         private val TAG = Matomo.tag(DefaultPacketSender::class.java)
-        private fun checkResponseCode(code: Int): Boolean {
-            return code == HttpURLConnection.HTTP_NO_CONTENT || code == HttpURLConnection.HTTP_OK
-        }
     }
 }
