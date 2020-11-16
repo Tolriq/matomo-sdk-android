@@ -167,7 +167,7 @@ class EventDiskCache(tracker: Tracker) {
                 out.append(event.timeStamp.toString()).append(" ").append(event.encodedQuery).append("\n")
                 dataWritten = true
             }
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             Timber.tag(TAG).e(e)
             newFile.deleteOnExit()
             return null
@@ -175,7 +175,7 @@ class EventDiskCache(tracker: Tracker) {
             if (out != null) {
                 try {
                     out.close()
-                } catch (e: IOException) {
+                } catch (e: Exception) {
                     Timber.tag(TAG).e(e)
                 }
             }
