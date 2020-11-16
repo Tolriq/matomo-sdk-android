@@ -428,7 +428,6 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     }
 
     init {
-        LegacySettingsPorter(matomo).port(this)
         mOptOut = preferences.getBoolean(PREF_KEY_TRACKER_OPTOUT, false)
         mDispatcher = matomo.dispatcherFactory.build(this)
         mDispatcher!!.dispatchMode = dispatchMode
