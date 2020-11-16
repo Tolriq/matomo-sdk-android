@@ -29,7 +29,7 @@ import java.util.regex.Pattern
 class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     val apiUrl: String = config.apiUrl
     val siteId: Int = config.siteId
-    private val mDefaultApplicationBaseUrl: String? = config.applicationBaseUrl
+    private val mDefaultApplicationBaseUrl: String = config.applicationBaseUrl
     private val mTrackingLock = Any()
     private val mDispatcher: Dispatcher?
     val name: String = config.trackerName
@@ -302,8 +302,8 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
         if (urlPath == null) {
             urlPath = defaultTrackMe[QueryParams.URL_PATH]
         } else if (!VALID_URLS.matcher(urlPath).matches()) {
-            val urlBuilder = StringBuilder(mDefaultApplicationBaseUrl ?: "")
-            if (!mDefaultApplicationBaseUrl!!.endsWith("/") && !urlPath.startsWith("/")) {
+            val urlBuilder = StringBuilder(mDefaultApplicationBaseUrl)
+            if (!mDefaultApplicationBaseUrl.endsWith("/") && !urlPath.startsWith("/")) {
                 urlBuilder.append("/")
             } else if (mDefaultApplicationBaseUrl.endsWith("/") && urlPath.startsWith("/")) {
                 urlPath = urlPath.substring(1)
@@ -430,7 +430,7 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
     init {
         mOptOut = preferences.getBoolean(PREF_KEY_TRACKER_OPTOUT, false)
         mDispatcher = matomo.dispatcherFactory.build(this)
-        mDispatcher!!.dispatchMode = dispatchMode
+        mDispatcher.dispatchMode = dispatchMode
         val userId = preferences.getString(PREF_KEY_TRACKER_USERID, null)
         defaultTrackMe[QueryParams.USER_ID] = userId
         var visitorId = preferences.getString(PREF_KEY_TRACKER_VISITORID, null)
