@@ -15,7 +15,7 @@ import java.util.HashMap
 class TrackMe {
     private val mQueryParams = HashMap<String, String>(DEFAULT_QUERY_CAPACITY)
 
-    constructor() {}
+    constructor()
     constructor(trackMe: TrackMe) {
         mQueryParams.putAll(trackMe.mQueryParams)
     }
@@ -31,16 +31,14 @@ class TrackMe {
     /**
      * Consider using [QueryParams] instead of raw strings
      */
-    @Synchronized
     operator fun set(key: String, value: String?): TrackMe {
-        if (value == null) mQueryParams.remove(key) else if (value.length > 0) mQueryParams[key] = value
+        if (value == null) mQueryParams.remove(key) else if (value.isNotEmpty()) mQueryParams[key] = value
         return this
     }
 
     /**
      * Consider using [QueryParams] instead of raw strings
      */
-    @Synchronized
     operator fun get(queryParams: String): String? {
         return mQueryParams[queryParams]
     }
@@ -58,31 +56,26 @@ class TrackMe {
      * @param value value
      * @return tracker instance
      */
-    @Synchronized
     operator fun set(key: QueryParams, value: String?): TrackMe {
         set(key.toString(), value)
         return this
     }
 
-    @Synchronized
     operator fun set(key: QueryParams, value: Int): TrackMe {
-        set(key, Integer.toString(value))
+        set(key, value.toString())
         return this
     }
 
-    @Synchronized
     operator fun set(key: QueryParams, value: Float): TrackMe {
-        set(key, java.lang.Float.toString(value))
+        set(key, value.toString())
         return this
     }
 
-    @Synchronized
     operator fun set(key: QueryParams, value: Long): TrackMe {
-        set(key, java.lang.Long.toString(value))
+        set(key, value.toString())
         return this
     }
 
-    @Synchronized
     fun has(queryParams: QueryParams): Boolean {
         return mQueryParams.containsKey(queryParams.toString())
     }
@@ -94,7 +87,6 @@ class TrackMe {
      * @param value value
      * @return this (for chaining)
      */
-    @Synchronized
     fun trySet(key: QueryParams, value: Int): TrackMe {
         return trySet(key, value.toString())
     }
@@ -106,12 +98,10 @@ class TrackMe {
      * @param value value
      * @return this (for chaining)
      */
-    @Synchronized
     fun trySet(key: QueryParams, value: Float): TrackMe {
         return trySet(key, value.toString())
     }
 
-    @Synchronized
     fun trySet(key: QueryParams, value: Long): TrackMe {
         return trySet(key, value.toString())
     }
@@ -123,7 +113,6 @@ class TrackMe {
      * @param value value
      * @return this (for chaining)
      */
-    @Synchronized
     fun trySet(key: QueryParams, value: String?): TrackMe {
         if (!has(key)) set(key, value)
         return this
@@ -134,17 +123,14 @@ class TrackMe {
      *
      * @return the parameter map, but without the base URL
      */
-    @Synchronized
     fun toMap(): Map<String, String> {
         return HashMap(mQueryParams)
     }
 
-    @Synchronized
     operator fun get(queryParams: QueryParams): String? {
         return mQueryParams[queryParams.toString()]
     }
 
-    @get:Synchronized
     val isEmpty: Boolean
         get() = mQueryParams.isEmpty()
 
