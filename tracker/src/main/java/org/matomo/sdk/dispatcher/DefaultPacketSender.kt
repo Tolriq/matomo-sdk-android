@@ -15,7 +15,7 @@ import java.nio.charset.Charset
 import java.util.zip.GZIPOutputStream
 
 class DefaultPacketSender : PacketSender {
-    private var mTimeout = Dispatcher.DEFAULT_CONNECTION_TIMEOUT.toLong()
+    private var mTimeout = Dispatcher.DEFAULT_CONNECTION_TIMEOUT
     private var mGzip = false
     override fun send(packet: Packet): Boolean {
         var urlConnection: HttpURLConnection? = null

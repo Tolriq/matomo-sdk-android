@@ -625,7 +625,7 @@ public class TrackerTest {
             trackMes.add(invocation.getArgument(0));
             return null;
         }).when(mDispatcher).submit(any(TrackMe.class));
-        when(mDispatcher.getConnectionTimeOut()).thenReturn(1000);
+        when(mDispatcher.getConnectionTimeOut()).thenReturn(1000L);
         for (int i = 0; i < 1000; i++) {
             trackMes.clear();
             final Tracker tracker = new Tracker(mMatomo, mTrackerBuilder);

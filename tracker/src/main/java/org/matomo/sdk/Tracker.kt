@@ -419,11 +419,11 @@ class Tracker(val matomo: Matomo, config: TrackerBuilder) {
         }
     }
 
-    fun getDispatchTimeout(): Int {
+    fun getDispatchTimeout(): Long {
         return mDispatcher.connectionTimeOut
     }
 
-    fun setDispatchTimeout(timeout: Int) {
+    fun setDispatchTimeout(timeout: Long) {
         mDispatcher.connectionTimeOut = timeout
     }
 

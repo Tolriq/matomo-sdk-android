@@ -43,11 +43,11 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
     @Volatile
     private var mDispatchThread: Thread? = null
 
-    override var connectionTimeOut: Int
+    override var connectionTimeOut: Long
         get() = mTimeOut
         set(timeOut) {
             mTimeOut = timeOut
-            mPacketSender.setTimeout(mTimeOut.toLong())
+            mPacketSender.setTimeout(mTimeOut)
         }
 
     override var dispatchInterval: Long
@@ -202,6 +202,6 @@ class DefaultDispatcher(private val mEventCache: EventCache, private val mConnec
 
     init {
         mPacketSender.setGzipData(mDispatchGzipped)
-        mPacketSender.setTimeout(mTimeOut.toLong())
+        mPacketSender.setTimeout(mTimeOut)
     }
 }

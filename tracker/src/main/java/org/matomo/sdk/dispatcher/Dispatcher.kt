@@ -16,7 +16,7 @@ interface Dispatcher {
      * Connection timeout in milliseconds
      *
      */
-    var connectionTimeOut: Int
+    var connectionTimeOut: Long
 
     /**
      * Packets are collected and dispatched in batches, this intervals sets the pause between batches.
@@ -66,7 +66,7 @@ interface Dispatcher {
     var dryRunTarget: MutableList<Packet>?
 
     companion object {
-        const val DEFAULT_CONNECTION_TIMEOUT = 5 * 1000
-        const val DEFAULT_DISPATCH_INTERVAL = (120 * 1000).toLong()
+        const val DEFAULT_CONNECTION_TIMEOUT = 5 * 1000L
+        const val DEFAULT_DISPATCH_INTERVAL = 120 * 1000L
     }
 }
