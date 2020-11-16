@@ -117,10 +117,10 @@ class EventDiskCache(tracker: Tracker) {
     private fun readEventFile(file: File): List<Event> {
         val events: MutableList<Event> = ArrayList()
         if (!file.exists()) return events
-        var `in`: InputStream? = null
+        var inputStream: InputStream? = null
         try {
-            `in` = FileInputStream(file)
-            val inputStreamReader = InputStreamReader(`in`)
+            inputStream = FileInputStream(file)
+            val inputStreamReader = InputStreamReader(inputStream)
             val bufferedReader = BufferedReader(inputStreamReader)
             val versionLine = bufferedReader.readLine()
             if (VERSION != versionLine) return events
@@ -141,9 +141,9 @@ class EventDiskCache(tracker: Tracker) {
         } catch (e: IOException) {
             Timber.tag(TAG).e(e)
         } finally {
-            if (`in` != null) {
+            if (inputStream != null) {
                 try {
-                    `in`.close()
+                    inputStream.close()
                 } catch (e: IOException) {
                     Timber.tag(TAG).e(e)
                 }
