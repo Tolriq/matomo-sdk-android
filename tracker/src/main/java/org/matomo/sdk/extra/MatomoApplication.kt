@@ -22,10 +22,10 @@ abstract class MatomoApplication : Application() {
      * @return a shared Tracker
      */
     @get:Synchronized
-    val tracker: Tracker?
+    val tracker: Tracker
         get() {
             if (mMatomoTracker == null) mMatomoTracker = onCreateTrackerConfig().build(matomo)
-            return mMatomoTracker
+            return mMatomoTracker!!
         }
 
     /**

@@ -30,9 +30,9 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
             with(matomoApplication.tracker)
         }
 
-        fun with(tracker: Tracker?) {
+        fun with(tracker: Tracker) {
             val trackMe = build()
-            tracker!!.track(trackMe)
+            tracker.track(trackMe)
         }
 
         val baseTrackMe = mBaseBuilder?.baseTrackMe ?: TrackMe()
@@ -47,10 +47,10 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
          *
          * @return false if an error occured, true if the TrackMe has been submitted to be dispatched.
          */
-        fun safelyWith(tracker: Tracker?): Boolean {
+        fun safelyWith(tracker: Tracker): Boolean {
             try {
                 val trackMe = build()
-                tracker!!.track(trackMe)
+                tracker.track(trackMe)
             } catch (e: IllegalArgumentException) {
                 Timber.e(e)
                 return false
