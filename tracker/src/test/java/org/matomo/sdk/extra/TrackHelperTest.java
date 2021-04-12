@@ -493,7 +493,7 @@ public class TrackHelperTest {
         assertEquals(mCaptor.getValue().get(QueryParams.EVENT_CATEGORY), "Exception");
         StackTraceElement traceElement = catchedException.getStackTrace()[0];
         assertNotNull(traceElement);
-        assertEquals(mCaptor.getValue().get(QueryParams.EVENT_ACTION), "org.matomo.sdk.extra.TrackHelperTest" + "/" + "testTrackException" + ":" + traceElement.getLineNumber());
+        assertEquals(mCaptor.getValue().get(QueryParams.EVENT_ACTION), "at org.matomo.sdk.extra.TrackHelperTest" + "." + "testTrackException" + " (:" + traceElement.getLineNumber()+")");
         assertEquals(mCaptor.getValue().get(QueryParams.EVENT_NAME), "<Null> exception");
     }
 
@@ -512,7 +512,7 @@ public class TrackHelperTest {
         verify(mTracker).track(mCaptor.capture());
         TrackMe tracked = mCaptor.getValue();
         assertEquals(tracked.get(QueryParams.EVENT_CATEGORY), "Exception");
-        assertTrue(tracked.get(QueryParams.EVENT_ACTION).startsWith("org.matomo.sdk.extra.TrackHelperTest/testExceptionHandler:"));
+        assertTrue(tracked.get(QueryParams.EVENT_ACTION).startsWith("at org.matomo.sdk.extra.TrackHelperTest.testExceptionHandler (:"));
         assertEquals(tracked.get(QueryParams.EVENT_NAME), "/ by zero");
         assertEquals(tracked.get(QueryParams.EVENT_VALUE), "1");
 

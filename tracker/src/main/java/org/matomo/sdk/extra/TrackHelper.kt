@@ -135,10 +135,10 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
         override fun build(): TrackMe {
             requireNotNull(mPath) { "Screen tracking requires a non-empty path" }
             val trackMe = TrackMe(baseTrackMe)
-                    .set(QueryParams.URL_PATH, mPath)
-                    .set(QueryParams.ACTION_NAME, mTitle)
-                    .set(QueryParams.CAMPAIGN_NAME, mCampaignName)
-                    .set(QueryParams.CAMPAIGN_KEYWORD, mCampaignKeyword)
+                .set(QueryParams.URL_PATH, mPath)
+                .set(QueryParams.ACTION_NAME, mTitle)
+                .set(QueryParams.CAMPAIGN_NAME, mCampaignName)
+                .set(QueryParams.CAMPAIGN_KEYWORD, mCampaignKeyword)
             if (mCustomVariables.size() > 0) {
                 trackMe[QueryParams.SCREEN_SCOPE_CUSTOM_VARIABLES] = mCustomVariables.toString()
             }
@@ -200,10 +200,10 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
 
         override fun build(): TrackMe {
             val trackMe = TrackMe(baseTrackMe)
-                    .set(QueryParams.URL_PATH, mPath)
-                    .set(QueryParams.EVENT_CATEGORY, mCategory)
-                    .set(QueryParams.EVENT_ACTION, mAction)
-                    .set(QueryParams.EVENT_NAME, mName)
+                .set(QueryParams.URL_PATH, mPath)
+                .set(QueryParams.EVENT_CATEGORY, mCategory)
+                .set(QueryParams.EVENT_ACTION, mAction)
+                .set(QueryParams.EVENT_NAME, mName)
             if (mValue != null) trackMe[QueryParams.EVENT_VALUE] = mValue!!
             return trackMe
         }
@@ -259,8 +259,8 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
             require(!(mURL == null || mURL.toExternalForm().isEmpty())) { "Outlink tracking requires a non-empty URL" }
             require(!(mURL.protocol != "http" && mURL.protocol != "https" && mURL.protocol != "ftp")) { "Only http|https|ftp is supported for outlinks" }
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.LINK, mURL.toExternalForm())
-                    .set(QueryParams.URL_PATH, mURL.toExternalForm())
+                .set(QueryParams.LINK, mURL.toExternalForm())
+                .set(QueryParams.URL_PATH, mURL.toExternalForm())
         }
     }
 
@@ -301,8 +301,8 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
 
         override fun build(): TrackMe {
             val trackMe = TrackMe(baseTrackMe)
-                    .set(QueryParams.SEARCH_KEYWORD, mKeyword)
-                    .set(QueryParams.SEARCH_CATEGORY, mCategory)
+                .set(QueryParams.SEARCH_KEYWORD, mKeyword)
+                .set(QueryParams.SEARCH_CATEGORY, mCategory)
             if (mCount != null) trackMe[QueryParams.SEARCH_NUMBER_OF_HITS] = mCount!!
             return trackMe
         }
@@ -416,9 +416,9 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
         override fun build(): TrackMe {
             require(!(mContentName == null || mContentName.isEmpty())) { "Tracking content impressions requires a non-empty content-name" }
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.CONTENT_NAME, mContentName)
-                    .set(QueryParams.CONTENT_PIECE, mContentPiece)
-                    .set(QueryParams.CONTENT_TARGET, mContentTarget)
+                .set(QueryParams.CONTENT_NAME, mContentName)
+                .set(QueryParams.CONTENT_PIECE, mContentPiece)
+                .set(QueryParams.CONTENT_TARGET, mContentTarget)
         }
     }
 
@@ -460,10 +460,10 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
             require(!(mContentName == null || mContentName.isEmpty())) { "Content name needs to be non-empty" }
             require(!(mInteraction == null || mInteraction.isEmpty())) { "Interaction name needs to be non-empty" }
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.CONTENT_NAME, mContentName)
-                    .set(QueryParams.CONTENT_PIECE, mContentPiece)
-                    .set(QueryParams.CONTENT_TARGET, mContentTarget)
-                    .set(QueryParams.CONTENT_INTERACTION, mInteraction)
+                .set(QueryParams.CONTENT_NAME, mContentName)
+                .set(QueryParams.CONTENT_PIECE, mContentPiece)
+                .set(QueryParams.CONTENT_TARGET, mContentTarget)
+                .set(QueryParams.CONTENT_INTERACTION, mInteraction)
         }
     }
 
@@ -491,9 +491,9 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
         override fun build(): TrackMe {
             if (mEcommerceItems == null) mEcommerceItems = EcommerceItems()
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.GOAL_ID, 0)
-                    .set(QueryParams.REVENUE, CurrencyFormatter.priceString(mGrandTotal))
-                    .set(QueryParams.ECOMMERCE_ITEMS, mEcommerceItems!!.toJson())
+                .set(QueryParams.GOAL_ID, 0)
+                .set(QueryParams.REVENUE, CurrencyFormatter.priceString(mGrandTotal))
+                .set(QueryParams.ECOMMERCE_ITEMS, mEcommerceItems!!.toJson())
         }
     }
 
@@ -559,14 +559,14 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
         override fun build(): TrackMe {
             if (mEcommerceItems == null) mEcommerceItems = EcommerceItems()
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.GOAL_ID, 0)
-                    .set(QueryParams.ORDER_ID, mOrderId)
-                    .set(QueryParams.REVENUE, CurrencyFormatter.priceString(mGrandTotal))
-                    .set(QueryParams.ECOMMERCE_ITEMS, mEcommerceItems!!.toJson())
-                    .set(QueryParams.SUBTOTAL, CurrencyFormatter.priceString(mSubTotal))
-                    .set(QueryParams.TAX, CurrencyFormatter.priceString(mTax))
-                    .set(QueryParams.SHIPPING, CurrencyFormatter.priceString(mShipping))
-                    .set(QueryParams.DISCOUNT, CurrencyFormatter.priceString(mDiscount))
+                .set(QueryParams.GOAL_ID, 0)
+                .set(QueryParams.ORDER_ID, mOrderId)
+                .set(QueryParams.REVENUE, CurrencyFormatter.priceString(mGrandTotal))
+                .set(QueryParams.ECOMMERCE_ITEMS, mEcommerceItems!!.toJson())
+                .set(QueryParams.SUBTOTAL, CurrencyFormatter.priceString(mSubTotal))
+                .set(QueryParams.TAX, CurrencyFormatter.priceString(mTax))
+                .set(QueryParams.SHIPPING, CurrencyFormatter.priceString(mShipping))
+                .set(QueryParams.DISCOUNT, CurrencyFormatter.priceString(mDiscount))
         }
     }
 
@@ -610,20 +610,19 @@ open class TrackHelper private constructor(baseTrackMe: TrackMe? = null) {
         }
 
         override fun build(): TrackMe {
-            val className: String
-            className = try {
+            val className: String = try {
                 val trace = mThrowable.stackTrace[0]
-                trace.className + "/" + trace.methodName + ":" + trace.lineNumber
+                "at " + trace.className + "." + trace.methodName + " (:" + trace.lineNumber + ")"
             } catch (e: java.lang.Exception) {
                 mThrowable.javaClass.name
             }
             val actionName = "exception/" + (if (mIsFatal) "fatal/" else "") + "$className/" + mDescription
             return TrackMe(baseTrackMe)
-                    .set(QueryParams.ACTION_NAME, actionName)
-                    .set(QueryParams.EVENT_CATEGORY, "Exception")
-                    .set(QueryParams.EVENT_ACTION, className)
-                    .set(QueryParams.EVENT_NAME, mDescription)
-                    .set(QueryParams.EVENT_VALUE, if (mIsFatal) 1 else 0)
+                .set(QueryParams.ACTION_NAME, actionName)
+                .set(QueryParams.EVENT_CATEGORY, "Exception")
+                .set(QueryParams.EVENT_ACTION, className)
+                .set(QueryParams.EVENT_NAME, mDescription)
+                .set(QueryParams.EVENT_VALUE, if (mIsFatal) 1 else 0)
         }
     }
 
